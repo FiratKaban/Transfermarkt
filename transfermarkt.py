@@ -3,6 +3,7 @@
 Created on Tue Sep 13 13:24:29 2022
 
 @author: FIRATKABAN
+@contributer: oguzhan
 """
 
 from collections import namedtuple
