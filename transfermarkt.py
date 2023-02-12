@@ -425,39 +425,3 @@ if __name__ == "__main__":
 # systemctl example link: https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
     
 # XXX: end of the project: ip reputation control & ip changer
-
-"""
-z_url = "https://www.transfermarkt.co.uk"
-main_url = "https://www.transfermarkt.co.uk/wettbewerbe/europa"
-
-yukaridaki url disindaki urllere erismeyecegiz .
-bu urlde ligler var ve bu liglerin sezonlari var.
-oncelikle pagination ile urlleri ardindan sezonlari cekiyoruz.
-
-get league pagination:
-https://www.transfermarkt.co.uk/wettbewerbe/europa?page=2
-https://www.transfermarkt.co.uk/wettbewerbe/europa?page=3
-https://www.transfermarkt.co.uk/wettbewerbe/europa?page=4
-.
-.
-.
-
-get leagues links:
-https://www.transfermarkt.co.uk/premier-league/startseite/wettbewerb/GB1
-.
-.
-.
-
-get seasons:
-https://www.transfermarkt.co.uk/premier-league/startseite/wettbewerb/GB1/plus/?saison_id=2021
-.
-.
-.
-
-(base) 192 Desktop/Transfermarkt ‹main*› » time python3 transfermarkt.py
-['premier-league/startseite/wettbewerb/GB1/plus', '1992']
-
-['premier-league/startseite/wettbewerb/GB1/plus?saison_id=1992', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1993', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1994', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1995', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1996', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1997', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1998', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1999', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2000', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2001', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2002', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2003', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2004', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2005', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2006', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2007', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2008', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2009', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2010', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2011', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2012', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2013', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2014', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2015', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2016', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2017', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2018', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2019', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2020', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2021', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2022', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1992', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1993', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1994', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1995', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1996', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1997', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1998', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=1999', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2000', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2001', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2002', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2003', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2004', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2005', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2006', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2007', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2008', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2009', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2010', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2011', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2012', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2013', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2014', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2015', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2016', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2017', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2018', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2019', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2020', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2021', 'premier-league/startseite/wettbewerb/GB1/plus?saison_id=2022']
-python3 transfermarkt.py  0.80s user 0.23s system 8% cpu 11.667 total
-
-"""
