@@ -382,7 +382,7 @@ def get_seasons():
             
             
     # XXX: for each link in links list get all team data
-    #      get all team data from league years using 'links' list
+    #      get all team data from league years using 'links' list.
     
     num_of_teams = 0
     for detail_data in soup.select('tr.odd,tr.even'):
