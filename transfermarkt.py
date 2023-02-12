@@ -99,7 +99,7 @@ def get_seasons():
     """ test mode """
     # https://www.transfermarkt.co.uk/premier-league/startseite/wettbewerb/GB1/plus/?saison_id=2021
 
-    response = requests.get('https://www.transfermarkt.co.uk/premier-league/startseite/wettbewerb/GB1/plus/?saison_id=2021', headers=HEADERS)
+    response = requests.get('https://www.transfermarkt.co.uk/premier-league/startseite/wettbewerb/GB1/plus/?saison_id=1992', headers=HEADERS)
     soup = BeautifulSoup(response.content, 'html.parser')    
 
     link.append(soup.find(name="div", attrs={"class": "row hide-on-print"}).get("data-path"))
