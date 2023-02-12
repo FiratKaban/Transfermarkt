@@ -86,6 +86,14 @@ recordholdingchampionsvalue=[]
 uefa_coefficient=[]
 uefa_coefficient_points =[]
 league_title=[]
+number_of_teams=[]
+player_number=[]
+player_number_foreigner=[]
+player_number_foreigner_percent=[]
+player_market_value=[]
+player_average_market_value=[] #ortalama yaş alındı.
+p_most_player_valuable=[]
+
 
 def get_seasons():
     """ test mode """
@@ -155,21 +163,76 @@ def get_seasons():
         else:
             league_name_text= league_title.append('NaN')
 
+    for allseason in soup.select("div.data-header__details"):
+        nteams = allseason.findAll("span",attrs={'class':'data-header__content'})[0]
+        if nteams is not None:
+            nt = number_of_teams.append(nteams.get_text(strip=True).strip())
+        else:
+            nt = number_of_teams.append('NaN')
+
+        nplayers = allseason.findAll("span",attrs={'class':'data-header__content'})[1]
+        if nplayers is not None:
+            npp = player_number.append(nplayers.get_text(strip=True).strip())
+        else:
+            npp = player_number.append('NaN')
+        
+        nplayers_foreigner = allseason.findAll("span",attrs={'class':'data-header__content'})[2]
+        if nplayers_foreigner is not None:
+            
+            nppf = player_number_foreigner.append(nplayers_foreigner.get_text(strip=True).split('\xa0')[0].strip())
+            
+        else:
+            nppf = player_number_foreigner.append('NaN')
+        
+        nplayers_foreigner_percent = allseason.findAll("span",attrs={'class':'tabellenplatz'})[0]
+        if nplayers_foreigner_percent is not None:
+            nppf = player_number_foreigner_percent.append(nplayers_foreigner_percent.get_text(strip=True).strip())
+        else:
+            nppf = player_number_foreigner_percent.append('NaN')
+
+        market_value = allseason.findAll("span",attrs={'class':'data-header__content'})[3]
+        if market_value is not None:
+            
+            m_v = player_market_value.append(market_value.get_text(strip=True).strip())
+            
+        else:
+            m_v = player_market_value.append('NaN')
+        
+
+        average_market_value = allseason.findAll("span",attrs={'class':'data-header__content'})[4]
+        if average_market_value is not None:
+            
+            #strip regex ile değiştirilebilir.
+            a_m_v = player_average_market_value.append(average_market_value.get_text(strip=True).strip())
+            
+        else:
+            a_m_v = player_average_market_value.append('NaN')
+            
+        # TODO: XXX: FIRAT: yukaridaki if else blocklari try except ile degistirilmeli.
+        #  sample of try catch blocks
+        most_player_valuable = allseason.findAll("span",attrs={'class':'data-header__content'})
+        try:
+            p_m_v = p_most_player_valuable.append(most_player_valuable[-1].a.get_text(strip=True))
+        # catch AttributeError
+        except AttributeError:
+            # TODO: do nothing
+            p_m_v = p_most_player_valuable.append('AttributeError')
+        # catch IndexError
+        except IndexError:
+            p_m_v = p_most_player_valuable.append('IndexError')
+        # catch Exception
+        except Exception as e:
+            p_m_v = p_most_player_valuable.append(e)
+            
+        
+        
+            
 
 
-"""
 
 
 
 
-
-"""
-
-    
-    
-    
-    # print(link)
-    # print('')
       
     for year in link:
         season_link = link[0]
@@ -209,7 +272,13 @@ if __name__ == "__main__":
     print(recordholdingchampionsvalue)
     print(uefa_coefficient)
     print(uefa_coefficient_points)
-    
+    print(number_of_teams)
+    print(player_number)
+    print(player_number_foreigner)
+    print(player_number_foreigner_percent)
+    print(player_market_value)
+    print(player_average_market_value)
+    print(p_most_player_valuable)
 # XXX: end of the project: SERVICE SCRIPT
 # python uygulamasinin sunucuda surekli calismasi icin 
 # ve surekli calisan uygulamanin monitor edilebilmesi icin
