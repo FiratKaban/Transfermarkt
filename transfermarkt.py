@@ -17,6 +17,20 @@ from parsel   import Selector
 # python uzerinden aws postgresql baglantisi icin gerekli kütüphaneler
 import psycopg2
 
+def represent_float(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+    
+def represent_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
 HEADERS = {'user-agent': ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5)'
                               'AppleWebKit/537.36 (KHTML, like Gecko)'
                               'Chrome/45.0.2454.101 Safari/537.36')}
@@ -69,6 +83,14 @@ player_number_foreigner_percent=[]
 player_market_value=[]
 player_average_market_value=[] #ortalama yaş alındı.
 p_most_player_valuable=[]
+
+teams_name=[]
+teams_squad=[]
+teams_link=[]
+teams_age=[]
+teams_foreigners=[]
+ts_avg_market_value=[]
+ts_ttl_market_value=[]
 
 def get_all_seasons():
     """ production mode """
@@ -348,50 +370,51 @@ def get_seasons():
         # catch AttributeError
         except AttributeError:
             # TODO: do nothing
-            p_m_v = p_most_player_valuable.append('AttributeError')
+            p_m_v = p_most_player_valuable.append('')
         # catch IndexError
         except IndexError:
-            p_m_v = p_most_player_valuable.append('IndexError')
+            p_m_v = p_most_player_valuable.append('')
         # catch Exception
         except Exception as e:
-            p_m_v = p_most_player_valuable.append(e)
+            p_m_v = p_most_player_valuable.append('')
     
             
             
             
     # XXX: for each link in links list get all team data
     #      get all team data from league years using 'links' list
-        
-            
-            
-            
-# XXX: TAKIMLARIN VERILERI            
-            
-        for league_detail_data in range(len(url_deneme)):
-             tree = requests.get(url_deneme[league_detail_data], headers = headers)
-         soup = BeautifulSoup(tree.content, 'html.parser')
-    print(f'TUBİTAK 2209-A; {url_deneme[league_detail_data]}')
+    
+    num_of_teams = 0
     for detail_data in soup.select('tr.odd,tr.even'):
         team = detail_data.find('td',{'class':'hauptlink no-border-links'})
         if team is not None:
-            takim = teams_name.append(team.get_text(strip=True))
-        else:
-            takim = teams_name.append('NaN')
+            team = teams_name.append(team.get_text(strip=True))
+
         teamlink = detail_data.find('td', {'class':'hauptlink no-border-links'})
         if teamlink is not None:
-              takimlinki =  teams_link.append(teamlink.select('a')[0]['href'])
-        else:
-              takımlinki =  teams_link.append('NaN')
-          
-        squad=detail_data.findAll('td')[2]
-        if squad is not None:
-             kadro = teams_squad.append(squad.get_text(strip=True))
-        else:
-             kadro=teams_squad.append('NaN')
-        
-        
-
+              teamlink =  teams_link.append(teamlink.select('a')[0]['href'])
+        ++num_of_teams
     
+        squad = detail_data.findAll('td')[2].get_text()
+        if squad != '' and squad is not None:
+            squad = teams_squad.append(squad)
+                
+        team_age = detail_data.findAll('td')[3].get_text()
+        if team_age != '' and team_age is not None and represent_float(team_age)==True:
+            team_age = teams_age.append(team_age)
+        
+        team_foreigners = detail_data.findAll('td')[4].get_text()
+        if team_foreigners != '' and team_foreigners is not None and represent_int(team_foreigners)==True:
+            team_foreigners = teams_foreigners.append(team_foreigners)
+                     
+        t_avg_market_value = detail_data.findAll('td')[5].get_text()
+        if t_avg_market_value != '' and t_avg_market_value is not None and represent_int(t_avg_market_value)==False:
+            t_avg_market_value = ts_avg_market_value.append(t_avg_market_value)
+
+        t_ttl_market_value = detail_data.findAll('td')[6].get_text()
+        if t_ttl_market_value != '' and t_ttl_market_value is not None:
+            t_ttl_market_value = ts_ttl_market_value.append(t_ttl_market_value)
+
 
 
 if __name__ == "__main__":
@@ -414,6 +437,17 @@ if __name__ == "__main__":
     print(player_market_value)
     print(player_average_market_value)
     print(p_most_player_valuable)
+    
+    print(teams_name)
+    print(teams_link)
+    print(teams_squad)
+    
+    print(teams_age)
+    print(teams_foreigners)
+    print(ts_avg_market_value)
+    print(ts_ttl_market_value)
+    
+    
 
 # TODO: Class mantigi ve veritabani baglantisi icin kod revize edilecek.
 
@@ -425,3 +459,6 @@ if __name__ == "__main__":
 # systemctl example link: https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
     
 # XXX: end of the project: ip reputation control & ip changer
+
+# how to check the string is string or integer
+# https://stackoverflow.com/questions/1265665/how-can-i-check-if-a-string-represents-an-int-without-using-try-except
