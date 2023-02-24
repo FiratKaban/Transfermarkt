@@ -60,6 +60,16 @@ def get_seasons():
       except:
         pass
       
+      try:
+        contract_expires_text = re.search('Contract expires', text[i].text).start()
+        contract_expires_text = text[x+1].text
+        first_alpha = re.search('[a-zA-Z0-9]', contract_expires_text).start()
+        last_alpha = re.search('[a-zA-Z0-9]', contract_expires_text[::-1]).start()
+        contract_expires_text = contract_expires_text[first_alpha:len(contract_expires_text)-last_alpha]
+        print(contract_expires_text)
+      except:
+        pass
+      
       x += 1
         
 
