@@ -7,15 +7,18 @@ Created on Tue Sep 13 13:24:29 2022
 """
 
 from collections import namedtuple
-import sys
 from bs4 import BeautifulSoup       # bs4 kütüphanesini import ediyoruz
 import requests                     # requests kütüphanesini import ediyoruz
 from requests import Session        # 
-import time, csv
+import time, csv, psycopg2, sys
 from parsel   import Selector
 
-# python uzerinden aws postgresql baglantisi icin gerekli kütüphaneler
-import psycopg2
+# TODO: DEGISKENLERIN DB'DE KARSILIGI OLMALI
+#       BUNUN ICIN LUCIDCHART VB CROWS FOOT NOTASYONU VB BI EXCEL DE OLABIIR
+#       HAZIRLARSAN, HAZIR VERIYE GORE DB YAPISINI GUNCELLEYEBILIRIZ
+
+#       DB'ye ekleme fonsiyon ornekleri gosterecegim. AWS postgresql kullanacagiz.
+#       orneklere gore tum degiskenlerin DB'ye yazilmasi kismi sende.
 
 def represent_float(s):
     try:
@@ -288,6 +291,9 @@ def get_all_seasons():
             t_ttl_market_value = detail_data.findAll('td')[6].get_text()
             if t_ttl_market_value != '' and t_ttl_market_value is not None:
                 t_ttl_market_value = ts_ttl_market_value.append(t_ttl_market_value)
+                
+                
+        # XXX: TEAMS.PY EKLENECEK
 
 
 

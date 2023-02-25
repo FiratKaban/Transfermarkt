@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Sep 13 13:24:29 2022
+
+@author: FIRATKABAN
+@contributer: cerebnismus
+"""
+
 from bs4 import BeautifulSoup       # bs4 kütüphanesini import ediyoruz
 import requests                     # requests kütüphanesini import ediyoruz
 from requests import Session        #
@@ -9,7 +17,7 @@ HEADERS = {'user-agent': ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5)'
 teams = {} # banner icin
 
 # TODO: PRINT SATIRLARI DB YE YAZILACAK SEKILDE GUNCELLENECEK
-
+# 
 def get_seasons():
     
     response = requests.get('https://www.transfermarkt.co.uk/manchester-city/kader/verein/281/saison_id/2022/plus/1', headers=HEADERS)
