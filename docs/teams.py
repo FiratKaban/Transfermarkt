@@ -125,6 +125,7 @@ def get_seasons():
     for player_data in soup.select('tr.odd,tr.even'):
         
         # TODO: TRY EXCEPT EKLENECEK
+        # XXX: DB SATIRLARI EKLENECEK
         shirt_number = player_data.find('td', attrs={'class': 'zentriert'}).get_text(strip=True)  # futbolcunun forma numarası
         player = player_data.find('td', {'class': 'hauptlink'}).get_text(strip=True)  # futbolcunun adı
         playerlink = player_data.find('td', {'class': 'hauptlink'}).a.get('href')  # futbolcunun sayfa linki
