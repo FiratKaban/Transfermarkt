@@ -134,8 +134,8 @@ def get_seasons():
         birthmonth = player_data.findAll('td')[5].get_text(strip=True)[0:4]  # futblcunun doğum ayı
         birthyear = player_data.findAll('td')[5].get_text(strip=True)[8:12]  # futblcunun doğum yılı
         age = player_data.findAll('td')[5].get_text(strip=True)[14:16]  # futbolcunun yaşı
-        nat1 = player_data.findAll('td')[6].img['alt']  # futbolcunun ulkeleri
-        nat2 = player_data.findAll('td')[6].img['alt']
+        nat1 = player_data.findAll('td')[6].img['alt'][0]  # futbolcunun ulkeleri
+        nat2 = player_data.findAll('td')[6].img['alt'][1]
         height = player_data.findAll('td')[7].get_text(strip=True)  # futbolcunun boyu
         foot = player_data.findAll('td')[8].get_text(strip=True)  # futbolcunun kullandığı ayak
         joined = player_data.findAll('td')[9].get_text(strip=True)[:12]  # takıma katıldığı tarih
