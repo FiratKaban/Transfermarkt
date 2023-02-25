@@ -257,11 +257,9 @@ def get_all_seasons():
                 p_m_v = p_most_player_valuable.append('')
         
 
-                
         # XXX: for each link in links list get all team data
         #      get all team data from league years using 'links' list.
         
-        num_of_teams = 0
         for detail_data in soup.select('tr.odd,tr.even'):
             team = detail_data.find('td',{'class':'hauptlink no-border-links'})
             if team is not None:
@@ -270,7 +268,6 @@ def get_all_seasons():
             teamlink = detail_data.find('td', {'class':'hauptlink no-border-links'})
             if teamlink is not None:
                 teamlink =  teams_link.append(teamlink.select('a')[0]['href'])
-            ++num_of_teams
         
             squad = detail_data.findAll('td')[2].get_text()
             if squad != '' and squad is not None:
@@ -296,10 +293,10 @@ def get_all_seasons():
 
 if __name__ == "__main__":
    
-    get_league_pagination()
-    get_league_links()
+    get_league_pagination(main_url)
+    get_league_links(pagination)
     get_all_seasons()
-    # print all lists
+
     print(country)
     print(league_title)
     print(leaguelevel)
