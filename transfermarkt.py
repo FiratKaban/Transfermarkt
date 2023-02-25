@@ -6,12 +6,16 @@ Created on Tue Sep 13 13:24:29 2022
 @contributer: cerebnismus
 """
 
+
 from collections import namedtuple
 from bs4 import BeautifulSoup       # bs4 kütüphanesini import ediyoruz
 import requests                     # requests kütüphanesini import ediyoruz
 from requests import Session        # 
 import time, csv, psycopg2, sys
 from parsel   import Selector
+
+# XXX !!! ONCE TRANSFERMARKT.PY NIN DUZGUN CALISTIGINDAN EMIN OLUN !!! XXX
+# ARALARA PRINT EKLEYIP CIKARARAK DEBUG YAPABILIRSIN
 
 # TODO: DEGISKENLERIN DB'DE KARSILIGI OLMALI
 #       BUNUN ICIN LUCIDCHART VB CROWS FOOT NOTASYONU VB BI EXCEL DE OLABIIR
