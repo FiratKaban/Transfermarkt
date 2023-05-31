@@ -14,7 +14,7 @@ import requests
 from bs4 import BeautifulSoup
 
 url = "https://www.transfermarkt.co.uk/wettbewerbe/europa"
-
+main_url = "https://www.transfermarkt.co.uk"
 headerz = {
     "user-agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5)"
@@ -24,48 +24,67 @@ headerz = {
 }
 
 
+leagues_pages = []
+leagues_links = []
+
 def get_leagues(url):
     """.
     This function gets the leagues data with pagination.
-    """
-    try:
-        r = requests.get(url, headers=headerz)
-        soup = BeautifulSoup(r.content, "html.parser")
-        page = soup.find("div", {"class": "pager"})
-        stri = page.find_all("li")[-1].a.get("href")
-        substring = stri[76:]
-        print("string:", stri)
-        print("substring:", substring)
 
-        return stri
-    # trunk-ignore(ruff/E722)
-    except:
-        print("Pagination error on get_leagues function")
-        return 0
+    URL compl    : https://www.transfermarkt.co.uk/wettbewerbe/europa
+    URL string   : /wettbewerbe/europa?page=25
+    URL substring: 25
+
+    https://www.transfermarkt.co.uk/wettbewerbe/europa?page=1
+    https://www.transfermarkt.co.uk/wettbewerbe/europa?page=2
+    """
+    r = requests.get(url, headers=headerz)
+    soup = BeautifulSoup(r.content, "html.parser")
+    page = soup.find("div", {"class": "pager"})
+    stri = page.find_all("li")[-1].a.get("href")
+    # string = /wettbewerbe/europa?page=25
+    # substring = 25
+    substring = stri[stri.find("=") + 1 :]
+
+    # print new line
+    print("                           ")
+    print("URL compl    :", url)
+    print("URL string   :", stri)
+    print("URL substring:", substring)
+
+
+    print("                           ")
+    for page in range(1, int(substring) + 1):
+        urli = url + "?page=" + str(page)
+        leagues_pages.append(urli)
+        print(urli)
+
+        try:
+            respo = requests.get(urli, headers=headerz)
+        except requests.exceptions.ConnectionError:
+            print("Connection refused", urli)
+            break
+        except requests.exceptions.Timeout:
+            print("Timeout", urli)
+            break
+        except requests.exceptions.RequestException as e:
+            print("Unknown err:", e, urli)
+            break
+
+        # td class hauptlink
+        # https://www.transfermarkt.co.uk/premier-league/startseite/wettbewerb/GB1
+        soup = BeautifulSoup(respo.content, "html.parser")
+        leagues_table = soup.select("tr.odd, tr.even")
+        for leagues_link in leagues_table:
+            leagues_links.append(main_url+leagues_link.select("a")[1]["href"])
+            print(main_url+leagues_link.select("a")[1]["href"])
+
+
+
+    return 0
 
 
 if __name__ == "__main__":
-    get_league_pagination(main_url)
-    get_league_links(pagination)
-    get_all_seasons()
-
-    print(league_href)
-    print(season_year)
-    print(url_season_list)
-
-    # TODO: Class mantigi ve veritabani baglantisi icin kod revize edilecek.
-
-    # XXX: end of the project: SERVICE SCRIPT
-    # python uygulamasinin sunucuda surekli calismasi icin
-    # ve surekli calisan uygulamanin monitor edilebilmesi icin
-    # cron job kullanilabilir. fakat uygulanabilirlik ve monitoring acisindan
-    # degerlendirdiginde systemctl'de calisacak olan service scripti daha mantikli.
-    # systemctl example link: https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
-
-    # XXX: end of the project: ip reputation control & ip changer
-
-    # how to check the string is string or integer
-    # https://stackoverflow.com/questions/1265665/how-can-i-check-if-a-string-represents-an-int-without-using-try-except
-    # -*- coding: utf-8 -*-
-
-    print(scnd - frst)
+    get_leagues(url)
+    print(leagues_links)
+    print("                           ")

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# trunk-ignore(ruff/D415)
 """
 Created on Sun Feb 26 12:13:20 2023
 
@@ -154,10 +155,10 @@ def get_league_links(pagination):
         try:
             response = requests.get(pagination[url], headers=HEADERS)
         except Exception:
-            time.sleep(3)
+            time.sleep(1)
             response = requests.get(pagination[url], headers=HEADERS)
         except TimeoutError:
-            time.sleep(3)
+            time.sleep(1)
             response = requests.get(pagination[url], headers=HEADERS)
 
         soup = BeautifulSoup(response.content, 'html.parser')
