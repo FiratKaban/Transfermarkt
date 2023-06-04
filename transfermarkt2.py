@@ -404,12 +404,16 @@ def get_players(player_href):
 
     place_of_birth = data[2].text.strip()
     foot = data[7].text.strip()
+
     try:
         player_agent = agent_data[0].text.strip()
-        player_agent_url = agent_data[0].a['href']
     except:
         player_agent = 'None'
+    try:
+        player_agent_url = agent_data[0].a['href']
+    except:
         player_agent_url = 'None'
+
     expires = data[9].text.strip()
     player_outfitter = data[11].text.strip()
     twitter = data[12].findAll('a')[0]['href']
