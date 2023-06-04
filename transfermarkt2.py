@@ -9,10 +9,29 @@ Updated on Wed May 31 13:29 2023
 @contributer: cerebnismus
 """
 
-
 import requests
+import psycopg2
 from datetime import datetime
 from bs4 import BeautifulSoup
+from parsel import Selector
+
+
+def database_connection():
+    """.
+    This function connects to the database.
+    """
+    conn = psycopg2.connect(
+        host="3.92.221.18",
+        database="postgres",
+        user="postgres",
+        password="myPassword")
+
+    cur = conn.cursor()
+    cur.execute("SELECT version();")
+    record = cur.fetchone()
+    print("You are connected to - ", record, "\n")
+    return cur, conn
+
 
 url = "https://www.transfermarkt.co.uk/wettbewerbe/europa"
 main_url = "https://www.transfermarkt.co.uk"
@@ -24,10 +43,8 @@ headerz = {
     )
 }
 
-# all print lines must be stored in database, update in same line !!!
+leagues_pages = [] # getting the leagues data with pagination
 
-
-leagues_pages = []
 def get_leagues(url):
     """.
     This function gets the leagues data with pagination.
@@ -97,8 +114,7 @@ def get_leagues(url):
 
 
 
-# trunk-ignore(ruff/E402)
-from parsel import Selector
+
 string1 = "https://www.transfermarkt.co.uk/"
 string2 = "?saison_id="
 
