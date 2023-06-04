@@ -15,6 +15,9 @@ HEADERS = {'user-agent': ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5)'
                           'Chrome/45.0.2454.101 Safari/537.36')}
 
 teams = {} # banner icin
+
+# TODO: PRINT SATIRLARI DB YE YAZILACAK SEKILDE GUNCELLENECEK
+# 
 def get_seasons():
     
     response = requests.get('https://www.transfermarkt.co.uk/manchester-city/kader/verein/281/saison_id/2022/plus/1', headers=HEADERS)
@@ -181,14 +184,15 @@ def get_seasons():
             print('contractmonth: ', contractmonth)
             print('contractyear: ', contractyear)
             print('marketvalue: ', marketvalue)
-        except Exception:
+        except:
             pass
 
 
 
 if __name__ == "__main__":
-    # get arg from user input
-    get_seasons(arg)
+    # get_league_pagination(main_url)
+    # get_league_links(pagination)
+    get_seasons()
     # print all lists
     print(teams)
 
