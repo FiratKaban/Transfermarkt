@@ -161,6 +161,24 @@ def get_clubs(league_url):
             print(league_most_player_valuable)
             print("")
 
+        for detail_data in league_href_soup.select('tr.odd,tr.even'):
+            team = detail_data.find('td', {'class': 'hauptlink no-border-links'}).get_text(strip=True)
+            team_link = detail_data.find('td', {'class': 'hauptlink no-border-links'}).select('a')[0]['href']
+            squad = detail_data.findAll('td')[2].get_text()
+            team_age = detail_data.findAll('td')[3].get_text()
+            team_foreigners = detail_data.findAll('td')[4].get_text()
+            t_avg_market_value = detail_data.findAll('td')[5].get_text()
+            t_ttl_market_value = detail_data.findAll('td')[6].get_text()
+
+            print(team)
+            print(team_link)
+            print(squad)
+            print(team_age)
+            print(team_foreigners)
+            print(t_avg_market_value)
+            print(t_ttl_market_value)
+            print("")
+
             exit()
 
 
