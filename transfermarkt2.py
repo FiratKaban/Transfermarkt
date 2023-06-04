@@ -400,11 +400,13 @@ def get_players(player_href):
 
     soup = BeautifulSoup(response.content, 'html.parser')
     data = soup.find_all('span',class_='info-table__content info-table__content--bold')
+    agent_data = soup.find_all('span',class_='info-table__content info-table__content--bold info-table__content--flex')
 
     place_of_birth = data[2].text.strip()
     foot = data[7].text.strip()
-    player_agent = data[8].findAll('a')[0].text.strip()
-    player_agent_url = data[8].findAll('a')[0]['href']
+    player_agent = agent_data[0].text.strip()
+    player_agent_url = agent_data[0].a['href']
+    
     expires = data[9].text.strip()
     player_outfitter = data[11].text.strip()
     twitter = data[12].findAll('a')[0]['href']
@@ -413,7 +415,7 @@ def get_players(player_href):
     print('place_of_birth:', place_of_birth)
     print('foot:', foot)
     print('player_agent:', player_agent)
-    print('player_agent_url:', player_agent_url)
+    print('player_agent_url:', string0+player_agent_url)
     print('expires:', expires)
     print('player_outfitter:', player_outfitter)
     print('twitter:', twitter)
