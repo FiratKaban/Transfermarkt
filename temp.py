@@ -22,8 +22,18 @@ for leagues_link in leagues_table:
     league_link = leagues_link.select("a")[1]["href"]
     league_name = leagues_link.select("a")[1]["title"]
     league_country = leagues_link.select("img")[1]["title"]
-
+    league_clubs = leagues_link.select("td")[4].text
+    league_players = leagues_link.select("td")[5].text
+    league_avg_age = leagues_link.select("td")[6].text
+    league_foreigners = leagues_link.select("td")[7].text
+    league_total_market_value = leagues_link.select("td")[9].text
     
     print("url",league_link)
     print("name",league_name)
     print("country",league_country)
+    print("clubs",league_clubs)
+    print("players",league_players)
+    print("avg_age",league_avg_age)
+    print("foreigners",league_foreigners)
+    print("total_market_value",league_total_market_value)
+    print("")
