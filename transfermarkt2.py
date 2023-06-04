@@ -403,14 +403,17 @@ def get_players(player_href):
 
     place_of_birth = data[2].text.strip()
     foot = data[7].text.strip()
+    player_agent = data[8].findAll('a')[0].text.strip()
+    player_agent_url = data[8].findAll('a')[0]['href']
     expires = data[9].text.strip()
     player_outfitter = data[11].text.strip()
-    # get social_media a href
     twitter = data[12].findAll('a')[0]['href']
     facebook = data[12].findAll('a')[1]['href']
     instagram = data[12].findAll('a')[2]['href']
     print('place_of_birth:', place_of_birth)
     print('foot:', foot)
+    print('player_agent:', player_agent)
+    print('player_agent_url:', player_agent_url)
     print('expires:', expires)
     print('player_outfitter:', player_outfitter)
     print('twitter:', twitter)
