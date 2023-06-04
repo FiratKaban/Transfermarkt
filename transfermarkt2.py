@@ -409,6 +409,7 @@ def get_players(player_href):
         player_agent = agent_data[0].text.strip()
     except:
         player_agent = 'None'
+
     try:
         player_agent_url = agent_data[0].a['href']
     except:
