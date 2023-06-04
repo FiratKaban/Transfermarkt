@@ -215,12 +215,12 @@ def get_clubs(league_url):
 
 
 def get_teams(linkin):
-    print("get_seasons started")
+    print("get_teams started")
     response = requests.get(linkin, headers=headerz)
 
     # check if the page is responding
     if response.status_code == 200:
-        print("Page not responding")
+        print("Page responding witg status code: 200 OK")
     else:
         status = response.status_code
         print("Page is responding with status code:", status)
@@ -331,7 +331,7 @@ def get_teams(linkin):
         teams['teams_stadium_seats'] = (f)
         teams['teams_transfer_record'] = (f)
 
-    print('\n\n')
+    print('')
 
     nat1 = []
     for player_data in soup.select('tr.odd,tr.even'):
@@ -360,82 +360,60 @@ def get_teams(linkin):
         marketvalue = player_data.findAll('td')[12].get_text(strip=True)
 
         try:
-            print('shirt_number: ', shirt_number) 
-            print('player: ', player)
-            print('playerlink: ', playerlink)
-            print('mainposition: ', mainposition)
-            print('dateofbirth: ', dateofbirth)
-            print('birthday: ', birthday)
-            print('birthmonth: ', birthmonth)
-            print('birthyear: ', birthyear)
-            print('age: ', age)
-            print('nat1: ', nat1)
-            print('nat2: ', nat2)
-            print('height: ', height)
-            print('foot: ', foot)
-            print('joined: ', joined)
-            print('joined_day: ', joined_day)
-            print('joined_month: ', joined_month)
-            print('joined_year: ', joined_year)
-            print('previousteam: ', previousteam)  
-            print('contractdate: ', contractdate)
-            print('contractday: ', contractday)
-            print('contractmonth: ', contractmonth)
-            print('contractyear: ', contractyear)
-            print('marketvalue: ', marketvalue)
+            print('shirt_number:', shirt_number) 
+            print('player:', player)
+            print('playerlink:', playerlink)
+            print('mainposition:', mainposition)
+            print('dateofbirth:', dateofbirth)
+            print('birthday:', birthday)
+            print('birthmonth:', birthmonth)
+            print('birthyear:', birthyear)
+            print('age:', age)
+            print('nat1:', nat1)
+            print('nat2:', nat2)
+            print('height:', height)
+            print('foot:', foot)
+            print('joined:', joined)
+            print('joined_day:', joined_day)
+            print('joined_month:', joined_month)
+            print('joined_year:', joined_year)
+            print('previousteam:', previousteam)  
+            print('contractdate:', contractdate)
+            print('contractday:', contractday)
+            print('contractmonth:', contractmonth)
+            print('contractyear:', contractyear)
+            print('marketvalue:', marketvalue)
             print('')
         except:
             pass
 
-        # set full player href
         player_href = string0 + playerlink
         get_players(player_href)
         # break; exit()
 
 
 def get_players(player_href):
+    print('get_players started')
+    print('player_href', player_href)
     response = requests.get(player_href, headers=headerz)
 
     soup = BeautifulSoup(response.content, 'html.parser')
-    etiket=soup.find_all('span',class_='info-table__content info-table__content--regular')
-    deger=soup.find_all('span',class_='info-table__content info-table__content--bold')
+    data = soup.find_all('span',class_='info-table__content info-table__content--bold')
 
-    for allseason in soup.select("div.info-table info-table--right-space"):
-        rrss=outfitter=contract_expires=manager=place=False
-        if (etiket.text.find('Place of birth:')!=-1):
-           place_of_birth=etiket.text.replace('\n','').replace('\xa0','')
-           place=True
-        elif (etiket.text.find('Player agent:')!=-1):
-            manager_company=etiket.text.replace('\n','').replace('\xa0','')
-            manager=True
-        elif (etiket.text.find('Contract expires:')!=-1):
-            expires=etiket.text.replace('\n','').replace('\xa0','')
-            contract_expires=True
-        elif (etiket.text.find('Outfitter:')!=-1):
-            player_outfitter=etiket.text.replace('\n','').replace(' ','')
-            outfitter=True
-        elif (etiket.text.find('Social-Media:')!=-1):
-            player_rrss=etiket.find_all('a')[0]['href']
-            rrss=True
+    place_of_birth = data[2].text.strip()
+    foot = data[7].text.strip()
+    player_agent = data[8].text.strip()
+    expires = data[9].text.strip()
+    player_outfitter = data[10].text.strip()
 
-        if(place==False):
-            place_of_birth=' '
-        if(manager==False):
-            manager_company=' '
-        if(contract_expires==False):
-            expires=' '
-        if(outfitter==False):
-            player_outfitter=' '
-        if(rrss==False):
-           player_rrss=' '
+    print('place_of_birth:', place_of_birth)
+    print('foot:', foot)
+    print('player_agent:', player_agent)
+    print('expires:', expires)
+    print('player_outfitter:', player_outfitter)
 
-        print('place_of_birth: ', place_of_birth)
-        print('manager_company: ', manager_company)
-        print('expires: ', expires)
-        print('player_outfitter: ', player_outfitter)
-        print('player_rrss: ', player_rrss)
-        print('')
-        break; exit()
+    print('')
+    exit(0)
 
 
 if __name__ == "__main__":
