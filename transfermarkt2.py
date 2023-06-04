@@ -18,6 +18,48 @@ from bs4 import BeautifulSoup
 from parsel import Selector
 # from requests import Session
 
+def create_tables(cur):
+    """
+    This function creates the necessary tables in the database.
+    """
+    # Create leagues table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS leagues (
+            league_id SERIAL PRIMARY KEY,
+            league_name TEXT,
+            league_country TEXT,
+            league_clubs TEXT,
+            league_players TEXT,
+            league_avg_age TEXT,
+            league_foreigners TEXT,
+            league_total_market_value TEXT
+        );
+    """)
+
+    # Create teams table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS teams (
+            team_id SERIAL PRIMARY KEY,
+            team_name TEXT,
+            team_country TEXT,
+            team_league_id INTEGER,
+            FOREIGN KEY (team_league_id) REFERENCES leagues (league_id)
+        );
+    """)
+
+    # Create players table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS players (
+            player_id SERIAL PRIMARY KEY,
+            player_name TEXT,
+            player_age TEXT,
+            player_nationality TEXT,
+            player_team_id INTEGER,
+            FOREIGN KEY (player_team_id) REFERENCES teams (team_id)
+        );
+    """)
+
+
 def database_connection():
     """.
     This function connects to the database.
@@ -394,6 +436,9 @@ def get_teams(linkin):
 
 
 def get_players(player_href):
+    """
+    Extract players data for each team
+    """
     print('get_players started')
     print('player_href', player_href)
     response = requests.get(player_href, headers=headerz)
@@ -434,6 +479,24 @@ def get_players(player_href):
     exit(0) # its for testing purposes
 
 
+def main():
+    """
+    This is the main function that controls the flow of the program.
+    """
+    # Connect to the database
+    conn, cur = database_connection()
+    # Create tables if they don't exist
+    create_tables(cur)
+
+    get_leagues(url) # and insert them into the database
+
+    # Close the database connection
+    cur.close()
+    conn.close()
+
+    # Print the scraped/inserted data
+    # print_data()
+
+
 if __name__ == "__main__":
-    database_connection()
-    get_leagues(url)
+    main()
