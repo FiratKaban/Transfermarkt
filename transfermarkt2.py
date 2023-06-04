@@ -49,9 +49,9 @@ def get_leagues(url):
 
     # print new line
     print("                           ")
-    print("URL compl    :", url)
-    print("URL string   :", stri)
-    print("URL substring:", substring)
+    print(url)
+    print(stri)
+    print(substring)
 
     print("                           ")
     for page in range(1, int(substring) + 1):
@@ -109,12 +109,59 @@ def get_clubs(league_url):
     secici = Selector(response.text)
 
     for seasons in secici.xpath("//select[@data-placeholder='Filter by season']/option"):
-            season_year = seasons.xpath('./@value').get()
-            league_href = seasons.xpath('//*[@id="subnavi"]/@data-path').get()
-            league_href = string1 + league_href + string2 + season_year
-            # last year data is empty, thats why we need to check
-            if season_year != str(datetime.now().year):
-                print(league_href)
+        season_year = seasons.xpath('./@value').get()
+        league_href = seasons.xpath('//*[@id="subnavi"]/@data-path').get()
+        league_href = string1 + league_href + string2 + season_year
+        # last year data is empty, thats why we need to check
+        if season_year != str(datetime.now().year):
+            print(league_href)
+        else:
+            continue # go to next season
+
+        league_href_response = requests.get(league_href, headers=headerz)
+        league_href_soup = BeautifulSoup(league_href_response.content, "html.parser")
+
+        # getting first and second season filtered league banner info
+        # banner 1
+        for banner_info in league_href_soup.select("div.data-header__club-info"):
+            league_country_name = banner_info.find("span", attrs={'class': 'data-header__club'}).text.strip()
+            league_level_name = banner_info.find("span", attrs={'class': 'data-header__content'}).text.strip()
+            league_reigning_champion = banner_info.findAll("span", attrs={'class': 'data-header__content'})[1].text.strip()
+            league_record_holding_champion = banner_info.findAll("span", attrs={'class': 'data-header__content'})[2].a.get_text()
+            league_record_holding_champion_value = banner_info.findAll("span", attrs={'class': 'data-header__content'})[3].get_text(strip=True)
+            league_uefa_coefficient = banner_info.findAll("span", attrs={'class': 'data-header__content'})[5].a.get_text(strip=True)
+            league_uefa_coefficient_value = banner_info.findAll("span", attrs={'class': 'data-header__content'})[6].get_text(strip=True)
+            print(league_country_name)
+            print(league_level_name)
+            print(league_reigning_champion)
+            print(league_record_holding_champion)
+            print(league_record_holding_champion_value)
+            print(league_uefa_coefficient)
+            print(league_uefa_coefficient_value)
+            print("")
+
+        # banner2
+        for x in league_href_soup.select("div.data-header__headline-container"):
+            league_name = x.find("h1", attrs={'class': 'data-header__headline-wrapper data-header__headline-wrapper--oswald'}).get_text(strip=True)
+            print(league_name)
+
+        for x in league_href_soup.select("div.data-header__details"):
+            league_num_of_clubs = x.findAll("span", attrs={'class': 'data-header__content'})[0].get_text(strip=True).strip()
+            league_num_of_players = x.findAll("span", attrs={'class': 'data-header__content'})[1].get_text(strip=True).strip()
+            league_num_of_foreigners = x.findAll("span", attrs={'class': 'data-header__content'})[2].get_text(strip=True).split('\xa0')[0].strip()
+            league_num_of_foreigners_percentage = x.findAll("span", attrs={'class': 'tabellenplatz'})[0].get_text(strip=True).strip()
+            league_market_value = x.findAll("span", attrs={'class': 'data-header__content'})[3].get_text(strip=True).strip()
+            league_avg_market_value = x.findAll("span", attrs={'class': 'data-header__content'})[4].get_text(strip=True).strip()
+            league_most_player_valuable = x.findAll("span", attrs={'class': 'data-header__content'})[-1].get_text(strip=True)
+            print(league_num_of_clubs)
+            print(league_num_of_players)
+            print(league_num_of_foreigners,'Players',league_num_of_foreigners_percentage)
+            print(league_market_value)
+            print(league_avg_market_value)
+            print(league_most_player_valuable)
+            print("")
+
+            exit()
 
 
 

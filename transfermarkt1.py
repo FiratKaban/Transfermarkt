@@ -395,6 +395,7 @@ def get_all_seasons():
         # teams #
         cur.execute('INSERT INTO public.teams(full_url) VALUES (%s,)', (url_season_list[league],))
         conn.commit() # commit edilmesi gerekiyor.
+        
         for detail_data in soup.select('tr.odd,tr.even'):
             team = detail_data.find(
                 'td', {'class': 'hauptlink no-border-links'})
