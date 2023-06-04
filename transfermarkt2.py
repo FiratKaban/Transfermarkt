@@ -165,7 +165,7 @@ def get_clubs(league_url):
             team = detail_data.find('td', {'class': 'hauptlink no-border-links'}).get_text(strip=True)
             team_link = detail_data.find('td', {'class': 'hauptlink no-border-links'}).select('a')[0]['href']
             squad = detail_data.findAll('td')[2].get_text()
-            team_age = detail_data.findAll('td')[3].get_text()
+            team_avg_age = detail_data.findAll('td')[3].get_text()
             team_foreigners = detail_data.findAll('td')[4].get_text()
             t_avg_market_value = detail_data.findAll('td')[5].get_text()
             t_ttl_market_value = detail_data.findAll('td')[6].get_text()
@@ -173,7 +173,7 @@ def get_clubs(league_url):
             print(team)
             print(team_link)
             print(squad)
-            print(team_age)
+            print(team_avg_age)
             print(team_foreigners)
             print(t_avg_market_value)
             print(t_ttl_market_value)
