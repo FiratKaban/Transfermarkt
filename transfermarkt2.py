@@ -18,14 +18,17 @@ from bs4 import BeautifulSoup
 from parsel import Selector
 # from requests import Session
 
-def create_tables(cur):
+
+def create_tables(cur, conn):
     """
     This function creates the necessary tables in the database.
     """
+    # Create a cursor object
+    cur = conn.cursor()
+
     # Create leagues table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS leagues (
-            league_id SERIAL PRIMARY KEY,
             league_name TEXT,
             league_country TEXT,
             league_clubs TEXT,
@@ -39,25 +42,27 @@ def create_tables(cur):
     # Create teams table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS teams (
-            team_id SERIAL PRIMARY KEY,
             team_name TEXT,
             team_country TEXT,
-            team_league_id INTEGER,
-            FOREIGN KEY (team_league_id) REFERENCES leagues (league_id)
+            team_league_id INTEGER
         );
     """)
 
     # Create players table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS players (
-            player_id SERIAL PRIMARY KEY,
             player_name TEXT,
             player_age TEXT,
             player_nationality TEXT,
-            player_team_id INTEGER,
-            FOREIGN KEY (player_team_id) REFERENCES teams (team_id)
+            player_team_id INTEGER
         );
     """)
+
+    # Commit the changes to the database
+    conn.commit()
+
+    # Close the cursor
+    cur.close()
 
 
 def database_connection():
@@ -484,9 +489,9 @@ def main():
     This is the main function that controls the flow of the program.
     """
     # Connect to the database
-    conn, cur = database_connection()
+    cur, conn = database_connection()
     # Create tables if they don't exist
-    create_tables(cur)
+    create_tables(cur, conn)
 
     get_leagues(url) # and insert them into the database
 
