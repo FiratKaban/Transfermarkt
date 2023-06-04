@@ -11,6 +11,7 @@ Updated on Wed May 31 13:29 2023
 
 
 import requests
+from datetime import datetime
 from bs4 import BeautifulSoup
 
 url = "https://www.transfermarkt.co.uk/wettbewerbe/europa"
@@ -25,9 +26,8 @@ headerz = {
 
 # all print lines must be stored in database, update in same line !!!
 
+
 leagues_pages = []
-
-
 def get_leagues(url):
     """.
     This function gets the leagues data with pagination.
@@ -76,7 +76,7 @@ def get_leagues(url):
         soup = BeautifulSoup(respo.content, "html.parser")
         leagues_table = soup.select("tr.odd, tr.even")
         for leagues_link in leagues_table:
-            leagues_url = main_url + leagues_link.select("a")[1]["href"]
+            league_url = main_url + leagues_link.select("a")[1]["href"]
             league_name = leagues_link.select("a")[1]["title"]
             league_country = leagues_link.select("img")[1]["title"]
             league_clubs = leagues_link.select("td")[4].text
@@ -84,7 +84,7 @@ def get_leagues(url):
             league_avg_age = leagues_link.select("td")[6].text
             league_foreigners = leagues_link.select("td")[7].text
             league_total_market_value = leagues_link.select("td")[9].text
-            print("url", leagues_url)
+            print("url", league_url)
             print("name", league_name)
             print("country", league_country)
             print("clubs", league_clubs)
@@ -93,10 +93,33 @@ def get_leagues(url):
             print("foreigners", league_foreigners)
             print("total_market_value", league_total_market_value)
             print("")
+            get_clubs(league_url)
 
-    return 0
+
+
+# trunk-ignore(ruff/E402)
+from parsel import Selector
+string1 = "https://www.transfermarkt.co.uk/"
+string2 = "?saison_id="
+
+def get_clubs(league_url):
+    # getting club info from all seasons of the league in leagues table
+    response = requests.get(league_url, headers=headerz)
+    # soup = BeautifulSoup(response.content, 'html.parser')
+    secici = Selector(response.text)
+
+    for seasons in secici.xpath("//select[@data-placeholder='Filter by season']/option"):
+            season_year = seasons.xpath('./@value').get()
+            league_href = seasons.xpath('//*[@id="subnavi"]/@data-path').get()
+            league_href = string1 + league_href + string2 + season_year
+            # last year data is empty, thats why we need to check
+            if season_year != str(datetime.now().year):
+                print(league_href)
+
+
 
 
 if __name__ == "__main__":
+
     get_leagues(url)
     print("                           ")
