@@ -417,7 +417,7 @@ def get_players(player_href):
     print('instagram:', instagram)
 
     print('')
-    exit(0)
+    exit(0) # its for testing purposes
 
 
 if __name__ == "__main__":
