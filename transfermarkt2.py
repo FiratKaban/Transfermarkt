@@ -23,12 +23,14 @@ def create_tables(cur, conn):
     """
     This function creates the necessary tables in the database.
     """
+
     # Create a cursor object
-    cur = conn.cursor()
+    # cur = conn.cursor()
 
     # Create leagues table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS leagues (
+            league_url TEXT,
             league_name TEXT,
             league_country TEXT,
             league_clubs TEXT,
@@ -39,30 +41,110 @@ def create_tables(cur, conn):
         );
     """)
 
+    # Create leagues_data table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS leagues_data (
+            league_url TEXT,
+            league_href TEXT,
+            league_name TEXT,
+            league_country_name TEXT,
+            league_reigning_champion TEXT,
+            league_record_holding_champion TEXT,
+            league_record_holding_champion_value TEXT,
+            league_uefa_coefficient TEXT,
+            league_uefa_coefficient_value TEXT,
+            league_num_of_clubs TEXT,
+            league_num_of_players TEXT,
+            league_num_of_foreigners TEXT,
+            league_num_of_foreigners_percentage TEXT,
+            league_market_value TEXT,
+            league_avg_market_value TEXT,
+            league_most_player_valuable TEXT
+        );
+    """)
+
     # Create teams table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS teams (
-            team_name TEXT,
+            team TEXT,
+            team_link TEXT,
+            team_href TEXT,
+            squad TEXT,
+            team_avg_age TEXT,
+            team_foreigners TEXT,
+            t_avg_market_value TEXT,
+            t_ttl_market_value TEXT
+        );
+    """)
+
+    # Create teams_data table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS teams_data (
+            league TEXT,
             team_country TEXT,
-            team_league_id INTEGER
+            team_href TEXT,
+            league_level TEXT,
+            teams_position TEXT,
+            in_league_since TEXT,
+            teams_foreigner_players_percant TEXT,
+            teams_stadium_name TEXT,
+            teams_stadium_seats TEXT,
+            teams_transfer_record TEXT
         );
     """)
 
     # Create players table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS players (
-            player_name TEXT,
-            player_age TEXT,
-            player_nationality TEXT,
-            player_team_id INTEGER
+            shirt_number TEXT,
+            player TEXT,
+            playerlink TEXT,
+            playerhref TEXT,
+            mainposition TEXT,
+            dateofbirth TEXT,
+            birthday TEXT,
+            birthmonth TEXT,
+            birthyear TEXT,
+            age TEXT,
+            nat1 TEXT,
+            nat2 TEXT,
+            height TEXT,
+            foot TEXT,
+            joined TEXT,
+            joined_day TEXT,
+            joined_month TEXT,
+            joined_year TEXT,
+            previousteam TEXT,
+            contractdate TEXT,
+            contractday TEXT,
+            contractmonth TEXT,
+            contractyear TEXT,
+            marketvalue TEXT
+        );
+    """)
+
+    # Create players_data table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS players_data (
+            id SERIAL PRIMARY KEY,
+            player_href TEXT,
+            place_of_birth TEXT,
+            foot TEXT,
+            player_agent TEXT,
+            player_agent_url TEXT,
+            expires TEXT,
+            player_outfitter TEXT,
+            twitter TEXT,
+            facebook TEXT,
+            instagram TEXT
         );
     """)
 
     # Commit the changes to the database
     conn.commit()
 
-    # Close the cursor
-    cur.close()
+    # Close
+    database_closer(cur, conn)
 
 
 def database_connection():
@@ -75,16 +157,23 @@ def database_connection():
         user="postgres",
         password="myPassword",
     )
-
     cur = conn.cursor()
-    cur.execute("SELECT version();")
+    # cur.execute("SELECT version();")
     # cur.execute('DELETE FROM public.test_table')
     # conn.commit()
     # cur.close()
     # conn.close()
-    record = cur.fetchone()
-    print("You are connected to - ", record, "\n")
+    # record = cur.fetchone()
+    # print("You are connected to - ", record, "\n")
     return cur, conn
+
+def database_closer(cur, conn):
+    """
+    This function closes the database connection.
+    """
+    cur.close()
+    conn.close()
+    print("PostgreSQL connection is closed")
 
 
 url = "https://www.transfermarkt.co.uk/wettbewerbe/europa"
@@ -141,14 +230,14 @@ def get_leagues(url):
         soup = BeautifulSoup(respo.content, "html.parser")
         leagues_table = soup.select("tr.odd, tr.even")
         for leagues_link in leagues_table:
-            league_url = main_url + leagues_link.select("a")[1]["href"]
-            league_name = leagues_link.select("a")[1]["title"]
-            league_country = leagues_link.select("img")[1]["title"]
-            league_clubs = leagues_link.select("td")[4].text
-            league_players = leagues_link.select("td")[5].text
-            league_avg_age = leagues_link.select("td")[6].text
-            league_foreigners = leagues_link.select("td")[7].text
-            league_total_market_value = leagues_link.select("td")[9].text
+            league_url = str(main_url + leagues_link.select("a")[1]["href"])
+            league_name = str(leagues_link.select("a")[1]["title"])
+            league_country = str(leagues_link.select("img")[1]["title"])
+            league_clubs = str(leagues_link.select("td")[4].text)
+            league_players = str(leagues_link.select("td")[5].text)
+            league_avg_age = str(leagues_link.select("td")[6].text)
+            league_foreigners = str(leagues_link.select("td")[7].text)
+            league_total_market_value = str(leagues_link.select("td")[9].text)
             print("Getting league data:")
             print("league_url", league_url)
             print("league_name", league_name)
@@ -159,6 +248,27 @@ def get_leagues(url):
             print("league_foreigners", league_foreigners)
             print("league_total_market_value", league_total_market_value)
             print("")
+
+            # create string tuple league
+            league = (str(league_url), str(league_name), str(league_country), str(league_clubs), str(league_players), str(league_avg_age), str(league_foreigners), str(league_total_market_value))
+
+            cur, conn = database_connection()
+            cur.execute("""
+                INSERT INTO leagues (
+                    league_url,
+                    league_name,
+                    league_country,
+                    league_clubs,
+                    league_players,
+                    league_avg_age,
+                    league_foreigners,
+                    league_total_market_value
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+            """, league)
+            conn.commit()
+            database_closer(cur, conn)
+
             get_clubs(league_url)
             # break # test
         # break # test
@@ -200,6 +310,7 @@ def get_clubs(league_url):
             league_record_holding_champion_value = banner_info.findAll("span", attrs={"class": "data-header__content"})[3].get_text(strip=True)
             league_uefa_coefficient = banner_info.findAll("span", attrs={"class": "data-header__content"})[5].a.get_text(strip=True)
             league_uefa_coefficient_value = banner_info.findAll("span", attrs={"class": "data-header__content"})[6].get_text(strip=True)
+            print('league_url',league_url)
             print('league_country_name',league_country_name)
             print('league_level_name',league_level_name)
             print('league_reigning_champion',league_reigning_champion)
@@ -230,7 +341,36 @@ def get_clubs(league_url):
             print('league_most_player_valuable',league_most_player_valuable)
             print("")
 
+        # create string tuple league_data
+        league_data = (str(league_url), str(league_href), str(league_name), str(league_country_name), str(league_reigning_champion), str(league_record_holding_champion), str(league_record_holding_champion_value), str(league_uefa_coefficient), str(league_uefa_coefficient_value), str(league_num_of_clubs), str(league_num_of_players), str(league_num_of_foreigners), str(league_num_of_foreigners_percentage), str(league_market_value), str(league_avg_market_value), str(league_most_player_valuable))
+
+        cur, conn = database_connection()
+        cur.execute("""
+            INSERT INTO leagues_data (
+                league_url,
+                league_href,
+                league_name,
+                league_country_name,
+                league_reigning_champion,
+                league_record_holding_champion,
+                league_record_holding_champion_value,
+                league_uefa_coefficient,
+                league_uefa_coefficient_value,
+                league_num_of_clubs,
+                league_num_of_players,
+                league_num_of_foreigners,
+                league_num_of_foreigners_percentage,
+                league_market_value,
+                league_avg_market_value,
+                league_most_player_valuable
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+        """, league_data)
+        conn.commit()
+        database_closer(cur, conn)
+
         print("Getting clubs page")
+        # team
         for detail_data in league_href_soup.select("tr.odd,tr.even"):
             try:
                 team = detail_data.find("td", {"class": "hauptlink no-border-links"}).get_text(strip=True)
@@ -255,6 +395,26 @@ def get_clubs(league_url):
                 print('t_avg_market_value',t_avg_market_value)
                 print('t_ttl_market_value',t_ttl_market_value)
                 print("")
+
+                # create string tuple team
+                team = (str(team), str(team_link), str(team_href), str(squad), str(team_avg_age), str(team_foreigners), str(t_avg_market_value), str(t_ttl_market_value))
+                cur, conn = database_connection()
+                cur.execute("""
+                    INSERT INTO teams (
+                        team,
+                        team_link,
+                        team_href,
+                        squad,
+                        team_avg_age,
+                        team_foreigners,
+                        t_avg_market_value,
+                        t_ttl_market_value
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+                """, team)
+                conn.commit()
+                database_closer(cur, conn)
+
             except Exception:
                 pass # pass means do nothing
 
@@ -262,9 +422,9 @@ def get_clubs(league_url):
             # break; exit()
 
 
-def get_teams(linkin):
+def get_teams(team_href):
     print("get_teams started")
-    response = requests.get(linkin, headers=headerz)
+    response = requests.get(team_href, headers=headerz)
 
     # check if the page is responding
     if response.status_code == 200:
@@ -379,13 +539,44 @@ def get_teams(linkin):
         teams['teams_stadium_seats'] = (f)
         teams['teams_transfer_record'] = (f)
 
+    # team_data with team_href
+    print('league',league.a.get_text(strip=True))
+    print('team_country',country.find('img')['alt'])
+    print('league_level',league_level.a.get_text(strip=True))
+    print('teams_position',tableposition.a.get_text(strip=True))
+    print('in_league_since',In_leaguesince.a.get_text(strip=True))
+    print('teams_foreigner_players_percant',foreigners_player_percant1.get_text(strip=True))
+    print('teams_stadium_name',stadium.a.get_text(strip=True))
+    print('teams_stadium_seats',seats.get_text(strip=True))
+    print('teams_transfer_record',transfer_record.a.get_text(strip=True))
     print('')
+
+    cur, conn = database_connection()
+    team_data = (str(league.a.get_text(strip=True)), str(country.find('img')['alt']), str(team_href), str(league_level.a.get_text(strip=True)), str(tableposition.a.get_text(strip=True)), str(In_leaguesince.a.get_text(strip=True)), str(foreigners_player_percant1.get_text(strip=True)), str(stadium.a.get_text(strip=True)), str(seats.get_text(strip=True)), str(transfer_record.a.get_text(strip=True)))
+    cur.execute("""
+        INSERT INTO teams_data (
+            league,
+            team_country,
+            team_href,
+            league_level,
+            teams_position,
+            in_league_since,
+            teams_foreigner_players_percant,
+            teams_stadium_name,
+            teams_stadium_seats,
+            teams_transfer_record
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+    """, team_data)
+    conn.commit()
+    database_closer(cur, conn)
 
     nat1 = []
     for player_data in soup.select('tr.odd,tr.even'):
         shirt_number = player_data.find('td', attrs={'class': 'zentriert'}).get_text(strip=True)  # futbolcunun forma numarası
         player = player_data.find('td', {'class': 'hauptlink'}).get_text(strip=True)  # futbolcunun adı
         playerlink = player_data.find('td', {'class': 'hauptlink'}).a.get('href')  # futbolcunun sayfa linki
+        player_href = string0 + playerlink
         mainposition = player_data.findAll('td')[4].get_text(strip=True)  # futbolcunun ana mevkisi
         dateofbirth = player_data.findAll('td')[5].get_text(strip=True)[:12]  # futbolcunun doğum tarihi
         birthday = player_data.findAll('td')[5].get_text(strip=True)[4:6]  # futbolcunun doğum günü
@@ -411,6 +602,7 @@ def get_teams(linkin):
             print('shirt_number:', shirt_number) 
             print('player:', player)
             print('playerlink:', playerlink)
+            print('player_href:', player_href)
             print('mainposition:', mainposition)
             print('dateofbirth:', dateofbirth)
             print('birthday:', birthday)
@@ -432,10 +624,45 @@ def get_teams(linkin):
             print('contractyear:', contractyear)
             print('marketvalue:', marketvalue)
             print('')
-        except:
+
+            cur, conn = database_connection()
+            player = (str(shirt_number), str(player), str(playerlink), str(player_href), str(mainposition), str(dateofbirth), str(birthday), str(birthmonth), str(birthyear), str(age), str(nat1), str(nat2), str(height), str(foot), str(joined), str(joined_day), str(joined_month), str(joined_year), str(previousteam), str(contractdate), str(contractday), str(contractmonth), str(contractyear), str(marketvalue))
+            cur.execute("""
+                INSERT INTO players (
+                    shirt_number,
+                    player,
+                    playerlink,
+                    playerhref,
+                    mainposition,
+                    dateofbirth,
+                    birthday,
+                    birthmonth,
+                    birthyear,
+                    age,
+                    nat1,
+                    nat2,
+                    height,
+                    foot,
+                    joined,
+                    joined_day,
+                    joined_month,
+                    joined_year,
+                    previousteam,
+                    contractdate,
+                    contractday,
+                    contractmonth,
+                    contractyear,
+                    marketvalue
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s);
+            """, player)
+            conn.commit()
+            database_closer(cur, conn)
+
+        except Exception as e:
+            print('Error:', e)
             pass
 
-        player_href = string0 + playerlink
         get_players(player_href)
         # break; exit()
 
@@ -470,6 +697,7 @@ def get_players(player_href):
     twitter = data[12].findAll('a')[0]['href']
     facebook = data[12].findAll('a')[1]['href']
     instagram = data[12].findAll('a')[2]['href']
+    print('player_href:', player_href)
     print('place_of_birth:', place_of_birth)
     print('foot:', foot)
     print('player_agent:', player_agent)
@@ -479,8 +707,28 @@ def get_players(player_href):
     print('twitter:', twitter)
     print('facebook:', facebook)
     print('instagram:', instagram)
-
     print('')
+
+    cur, conn = database_connection()
+    player_data = (str(player_href), str(place_of_birth), str(foot), str(player_agent), str(string0+player_agent_url), str(expires), str(player_outfitter), str(twitter), str(facebook), str(instagram))
+    cur.execute("""
+        INSERT INTO players_data (
+            player_href,
+            place_of_birth,
+            foot,
+            player_agent,
+            player_agent_url,
+            expires,
+            player_outfitter,
+            twitter,
+            facebook,
+            instagram
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+    """, player_data)
+    conn.commit()
+    database_closer(cur, conn)
+
     exit(0) # its for testing purposes
 
 
@@ -492,12 +740,14 @@ def main():
     cur, conn = database_connection()
     # Create tables if they don't exist
     create_tables(cur, conn)
+    print('Database connection established.')
 
     get_leagues(url) # and insert them into the database
 
     # Close the database connection
     cur.close()
     conn.close()
+    print('Database connection closed.')
 
     # Print the scraped/inserted data
     # print_data()
