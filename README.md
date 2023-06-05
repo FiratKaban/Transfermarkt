@@ -45,50 +45,45 @@ JOIN teams_data td ON t.team_href = td.team_href;
 ```
 
 ### SOME NOTES ABOUT THE PROJECT
+- [x] transfermarkt.py is the main file. It is used to get the data from the website.
+- [x] create_db.py is used to create the database.
+- [x] insert_db.py is used to insert the data into the database.
+- [x] insert_db.py and create_db.py files are included in transfermarkt2.py file.
+- [x] transfermarkt2.py is used to get the data from the website and insert it into the database.
+- [ ] transfermarkt3.py have services for the database. It is not finished yet.
 
-XXX insert_db.py ve create_db.py dosyalari transfermarkt2.py icine eklendi !
 
-XXX !!! ONCE TRANSFERMARKT.PY NIN DUZGUN CALISTIGINDAN EMIN OLUN !!! XXX
-ARALARA PRINT EKLEYIP CIKARARAK DEBUG YAPABILIRSIN
 
-TODO: DEGISKENLERIN DB'DE KARSILIGI OLMALI
+
+```python
+# -*- coding: utf-8 -*-
+""".
+Created on Tue Sep 13 13:24 2022 - Initial commit, less code, more comments
+Updated on Sun Feb 26 12:13 2023 - AWS RDS PostgreSQL database added and tested
+Updated on Wed May 31 13:29 2023 - New scraper added and unnecessary codes removed
+Updated on Mon Jun 05 01:29 2023 - Database related improvements and fixes
+...
+@author: FIRATKABAN
+@contributer: cerebnismus
+"""
+```
+
+- [x] DEGISKENLERIN DB'DE KARSILIGI OLMALI
       BUNUN ICIN LUCIDCHART VB CROWS FOOT NOTASYONU VB BI EXCEL DE OLABIIR
       HAZIRLARSAN, HAZIR VERIYE GORE DB YAPISINI GUNCELLEYEBILIRIZ
-
-      DB'ye ekleme fonsiyon ornekleri gosterecegim. AWS postgresql kullanacagiz.
+- [x] DB'ye ekleme fonsiyon ornekleri gosterecegim. AWS postgresql kullanacagiz.
       orneklere gore tum degiskenlerin DB'ye yazilmasi kismi sende.
-
-TODO: Bu yapi daha sonra dictinary olarak degistirilebilir. Yonetmesi daha kolay olur
-
-XXX: bu formatta biz bir ligin sezonlarini almak yerine
-XXX: bir ligdeki ilk sezonun baslangic yilini aliyoruz. orn: 1928
-XXX: bu yuzden bundan sonraki fonksiyona try catch bloklari ekleyerek
-XXX: hata aldigimizda ilgili ligin o sezon yilinda aktif olmadigini anlayacagiz
-          
-XXX: for each link in links list get all team data
-     get all team data from league years using 'links' list            
-
-TODO: XXX: FIRAT: yukaridaki if else blocklari try except ile degistirilmeli.
+- [ ] TODO: Yapi daha sonra dictinary olarak degistirilebilir. Yonetmesi daha kolay olur
+- [x] TODO: XXX: FIRAT: yukaridaki if else blocklari try except ile degistirilmeli.
  sample of try catch blocks
-
-        
-XXX: for each link in links list get all team data
+- [x] XXX: for each link in links list get all team data
      get all team data from league years using 'links' list.
-          
-XXX: TEAMS.PY EKLENECEK
+- [x] XXX: TEAMS.PY codes are included in transfermarkt2.py file.
+- [x] TODO: Class mantigi ve veritabani baglantisi icin kod revize edilecek.
+- [ ] XXX: end of the project: SERVICE SCRIPT https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
+- [ ] XXX: end of the project: ip reputation control & ip changer and proxy support
+- [ ] XXX: end of the project: database backup to aws s3 with encryption and compression
 
-TODO: Class mantigi ve veritabani baglantisi icin kod revize edilecek.
-
-XXX: end of the project: SERVICE SCRIPT
-python uygulamasinin sunucuda surekli calismasi icin 
-ve surekli calisan uygulamanin monitor edilebilmesi icin
-cron job kullanilabilir. fakat uygulanabilirlik ve monitoring acisindan
-degerlendirdiginde systemctl'de calisacak olan service scripti daha mantikli.
-systemctl example link: https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
-    
-XXX: end of the project: ip reputation control & ip changer
-how to check the string is string or integer
-https://stackoverflow.com/questions/1265665/how-can-i-check-if-a-string-represents-an-int-without-using-try-except
 
 ### SCREENSHOTS
 <img src="screenshot.png" alt="cool"/>
