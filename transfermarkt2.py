@@ -9,23 +9,17 @@ Updated on Mon Jun 05 01:29 2023
 @contributer: cerebnismus
 """
 
-from datetime import datetime
-import subprocess
-
 import psycopg2
 import requests
 from bs4 import BeautifulSoup
 from parsel import Selector
-# from requests import Session
+from datetime import datetime
 
 
 def create_tables(cur, conn):
     """
     This function creates the necessary tables in the database.
     """
-
-    # Create a cursor object
-    # cur = conn.cursor()
 
     # Create leagues table
     cur.execute("""
